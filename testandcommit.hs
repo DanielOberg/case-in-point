@@ -16,6 +16,7 @@ import Language.Haskell.Interpreter.Unsafe
 
 import System.Process
 import System.Exit
+import Control.Monad
 
 main = do
   args <- getArgs
@@ -34,7 +35,8 @@ commit files = do
 
 readTestCasesFromFile :: FilePath -> IO ([Maybe String])
 readTestCasesFromFile f = do
-                system $ "ghc --make " ++ f
+                compiler_result <- system $ "ghc --make " ++ f
+                guard (compiler_result == ExitSuccess)
                 putStrLn f
                 contents <- readFile f
                 let regex = makeRegexOpts compExtended defaultExecOpt "[:space:]*[\\-]+.*>(.*)\n[\\-]+[:space:]*\n"
@@ -51,7 +53,7 @@ tryTestCase f str = do
                 session <- testCase (formatTestCase str) f
                 case session of
                       Left e -> do
-                        putStrLn $ "Compilation error: " ++ (formatTestCase str) ++ (show e)
+                        putStrLn $ "Compilation error: " ++ (formatTestCase str) ++ " make sure it works in ghci."
                         return $ Just (f ++ " :" ++ str)
                       Right True -> do
                                       putStrLn $ "Passed: " ++ strip (head $ lines str)
