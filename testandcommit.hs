@@ -62,6 +62,16 @@ tryTestCase f str = do
 
 
 
+-- | Converts the string comment to a equal test
+--
+-- str  - The String to be used
+--
+-- Examples
+--
+--   > formatTestCase "multiplex \"Tom\" 4 \n --\"TomTomTomTom\""
+--   "multiplex \"Tom\" 4   ==\"TomTomTomTom\""
+--
+-- Returns the duplicated String.
 formatTestCase str = replace "--" "==" $ strip $ replace "\n" " " str
 
 
