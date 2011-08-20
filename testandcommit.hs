@@ -34,6 +34,7 @@ commit files = do
 
 readTestCasesFromFile :: FilePath -> IO ([Maybe String])
 readTestCasesFromFile f = do
+                system $ "ghc --make " ++ f
                 putStrLn f
                 contents <- readFile f
                 let regex = makeRegexOpts compExtended defaultExecOpt "[:space:]*[\\-]+.*>(.*)\n[\\-]+[:space:]*\n"
@@ -47,9 +48,7 @@ readTestCasesFromFile f = do
 
 tryTestCase :: FilePath -> String -> IO (Maybe String)
 tryTestCase f str = do
-                --putStrLn str
                 session <- testCase (formatTestCase str) f
-                --putStrLn "fdsjlk"
                 case session of
                       Left e -> do
                         putStrLn $ "Compilation error: " ++ (formatTestCase str) ++ (show e)
@@ -72,7 +71,6 @@ testCase str file = runInterpreter $ do
   modules <- getLoadedModules
   setImports $ ["Prelude"] ++ modules
   result <- interpret str (as :: Bool)
-  --liftIO $ putStrLn $ show result
   return result
 
 
