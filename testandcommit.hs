@@ -30,10 +30,9 @@ main = do
               _  -> return (ExitFailure 1)
          return ()
 
-commit files = do
-  system $ "git commit -e -i " ++ (unwords files)
+commit files = system $ "git commit -e -i " ++ unwords files
 
-readTestCasesFromFile :: FilePath -> IO ([Maybe String])
+readTestCasesFromFile :: FilePath -> IO [Maybe String]
 readTestCasesFromFile f = do
                 compiler_result <- system $ "ghc --make " ++ f
                 guard (compiler_result == ExitSuccess)
@@ -42,24 +41,21 @@ readTestCasesFromFile f = do
                 let regex = makeRegexOpts compExtended defaultExecOpt "[:space:]*[\\-]+.*>(.*)\n[\\-]+[:space:]*\n"
                 let matches = matchRegex regex contents
                 case matches of
-                     Just matches' -> do
-                              results <- mapM (tryTestCase f) matches'
-                              return results
-                     Nothing -> do
-                              return $ [Just "f"]
+                     Just matches' -> mapM (tryTestCase f) matches'
+                     Nothing -> return [Just "f"]
 
 tryTestCase :: FilePath -> String -> IO (Maybe String)
 tryTestCase f str = do
                 session <- testCase (formatTestCase str) f
                 case session of
                       Left e -> do
-                        putStrLn $ "Compilation error: " ++ (formatTestCase str) ++ " make sure it works in ghci."
+                        putStrLn $ "Compilation error: " ++ formatTestCase str ++ " make sure it works in ghci."
                         return $ Just (f ++ " :" ++ str)
                       Right True -> do
                                       putStrLn $ "Passed: " ++ strip (head $ lines str)
-                                      return (Nothing)
+                                      return Nothing
                       Right False -> do
-                                      putStrLn $ "Failed"
+                                      putStrLn "Failed"
                                       return $ Just (f ++ " :" ++ strip (head $ lines str))
 
 
@@ -81,9 +77,8 @@ testCase str file = runInterpreter $ do
   set [languageExtensions := [ExtendedDefaultRules]]
   loadModules [file]
   modules <- getLoadedModules
-  setImports $ ["Prelude"] ++ modules
-  result <- interpret str (as :: Bool)
-  return result
+  setImports $ "Prelude" : modules
+  interpret str (as :: Bool)
 
 
 -- | Duplicate some text an abitrary number of times.
@@ -97,5 +92,5 @@ testCase str file = runInterpreter $ do
 --   "TomTomTomTom"
 --
 -- Returns the duplicated String.
-multiplex text count = concat $ take count $ repeat text
+multiplex text count = concat $ replicate count text
 
