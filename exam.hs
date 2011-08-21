@@ -28,7 +28,7 @@ main = do
          case errors of
               [] -> commit args
               _  -> do
-                mapM (putStrLn . (++ "\n")) errors 
+                mapM_ (putStrLn . (++ "\n")) errors 
                 return (ExitFailure 1)
          return ()
 
@@ -43,35 +43,33 @@ readTestCasesFromFile f = do
   let regex = "(?sx) [\\s]* -- [\\s]+ >+ (.+?) -- [\\s]* \\n"
   let matches = (contents =~ regex) :: [[String]]
   --putStr (show (map last matches))
-  mapM (tryTestCase f) (map last matches)
+  mapM (tryTestCase f . last) matches
 
 tryTestCase :: FilePath -> String -> IO (Maybe String)
 tryTestCase f str = do
   let (example, expected_result) = breakIntoTestCase str
   session <- testCase (breakIntoTestCase str) f
   case session of
-       Left e -> do
-         return $ Just ("Compilation error: \n" ++ f ++ " :" ++ 
+       Left e -> return $ Just ("Compilation error: \n" ++ f ++ " :" ++ 
                         combineIntoEqualTest example expected_result ++ 
                         " make sure it works in ghci.")
-       Right Nothing -> do
-         return Nothing
-       Right (Just result_that_is_wrong) -> do
-         return $ Just ("Failed: \n" ++ f ++ ":" ++ " " ++ example ++ 
+       Right Nothing -> return Nothing
+       Right (Just result_that_is_wrong) -> return $ Just ("Failed: \n" ++ 
+                        f ++ ":" ++ " " ++ example ++ 
                         "\n returns: \n" ++ result_that_is_wrong ++ 
                         if not (null expected_result) 
                            then "\n not: \n" ++ expected_result 
                            else "\n so go ahead and fill it out")
 
 testCase (example, expected_result) file = runInterpreter $ do
-  loadModules ["*" ++ file]
+  loadModules ['*':file]
   modules <- getLoadedModules
   setTopLevelModules modules
   is_correct <- interpret (combineIntoEqualTest example expected_result) (as :: Bool)
   case is_correct of
        True -> return Nothing
        False -> do
-         wrong_result <- (eval example)
+         wrong_result <- eval example
          return (Just wrong_result)
 
 -- | Parses the given str
@@ -90,7 +88,7 @@ breakIntoTestCase str = (example, result)
     splitted = splitOn "\n--" str
     example  = fixstr (head splitted)
     result   = unwords (map fixstr (tail splitted))
-    fixstr s = (strip $ replace "\n" " " s)
+    fixstr s = strip $ replace "\n" " " s
 
 -- | Simple function that adds a equality sign between two strings
 --
