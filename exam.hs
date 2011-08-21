@@ -64,7 +64,7 @@ tryTestCase f str = do
                                                       if not (null expected_result) then "\n not: \n" ++ expected_result else 
                                                       "\n so go ahead and fill it out")
 
--- | Converts the string comment to a equal test
+-- | Parses the given str
 --
 -- str  - The String to be used
 --
@@ -73,7 +73,7 @@ tryTestCase f str = do
 --   >>> breakIntoTestCase "multiplex \"Tom\" 4  \n-- \"TomTomTomTom\""
 --   ("multiplex \"Tom\" 4","\"TomTomTomTom\"")
 --
--- Returns the duplicated String.
+-- Returns a tuple (example, expected result)
 breakIntoTestCase :: String -> (String, String)
 breakIntoTestCase str = (example, result)
             where 
@@ -82,6 +82,17 @@ breakIntoTestCase str = (example, result)
               result = unwords (map fixstr (tail splitted))
               fixstr s = (strip $ replace "\n" " " s)
 
+-- | Simple function that adds a equality sign between two strings
+--
+-- example  - A string
+-- expected_result - A String
+--
+-- Examples
+--
+--   >>> combineIntoEqualTest "cat" "dog" 
+--   "cat == dog"
+--
+-- Returns a string with an equality sign inserted between the strings
 combineIntoEqualTest example expected_result = example ++ " == " ++ expected_result
 
 testCase (example, expected_result) file = runInterpreter $ do
@@ -94,8 +105,6 @@ testCase (example, expected_result) file = runInterpreter $ do
        False -> do
               wrong_result <- (eval example)
               return (Just wrong_result)
-
-
 
 -- | Duplicate some text an abitrary number of times.
 --
