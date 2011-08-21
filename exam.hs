@@ -28,41 +28,51 @@ main = do
          case errors of
               [] -> commit args
               _  -> do
-                    mapM (putStrLn . (++ "\n")) errors 
-                    return (ExitFailure 1)
+                mapM (putStrLn . (++ "\n")) errors 
+                return (ExitFailure 1)
          return ()
 
 commit files = system $ "git commit -e -i " ++ unwords files
 
 readTestCasesFromFile :: FilePath -> IO [Maybe String]
 readTestCasesFromFile f = do
-                compiler_result <- system $ "ghc --make " ++ f
-                guard (compiler_result == ExitSuccess)
-                --putStrLn f
-                contents <- readFile f
-                let regex = "(?sx) [\\s]* -- [\\s]+ >+ (.+?) -- [\\s]* \\n"
-                let matches = (contents =~ regex) :: [[String]]
-                --putStr (show (map last matches))
-                mapM (tryTestCase f) (map last matches)
+  compiler_result <- system $ "ghc --make " ++ f
+  guard (compiler_result == ExitSuccess)
+  --putStrLn f
+  contents <- readFile f
+  let regex = "(?sx) [\\s]* -- [\\s]+ >+ (.+?) -- [\\s]* \\n"
+  let matches = (contents =~ regex) :: [[String]]
+  --putStr (show (map last matches))
+  mapM (tryTestCase f) (map last matches)
 
 tryTestCase :: FilePath -> String -> IO (Maybe String)
 tryTestCase f str = do
-                let (example, expected_result) = breakIntoTestCase str
-                session <- testCase (breakIntoTestCase str) f
-                case session of
-                      Left e -> do
-                        --putStrLn $ "Compilation error: " ++ combineIntoEqualTest example expected_result ++ " make sure it works in ghci."
-                        --putStrLn (show e)
-                        return $ Just ("Compilation error: \n" ++ f ++ " :" ++ combineIntoEqualTest example expected_result ++ 
-                                       " make sure it works in ghci.")
-                      Right Nothing -> do
-                                      --putStrLn $ "Passed: " ++ strip (head $ lines str)
-                                      return Nothing
-                      Right (Just result_that_is_wrong) -> do
-                                      --putStrLn $ "Failed:" ++ strip (head $ lines str)
-                                      return $ Just ("Failed: \n" ++ f ++ ":" ++ " " ++ example ++ "\n returns: \n" ++ result_that_is_wrong ++ 
-                                                      if not (null expected_result) then "\n not: \n" ++ expected_result else 
-                                                      "\n so go ahead and fill it out")
+  let (example, expected_result) = breakIntoTestCase str
+  session <- testCase (breakIntoTestCase str) f
+  case session of
+       Left e -> do
+         return $ Just ("Compilation error: \n" ++ f ++ " :" ++ 
+                        combineIntoEqualTest example expected_result ++ 
+                        " make sure it works in ghci.")
+       Right Nothing -> do
+         return Nothing
+       Right (Just result_that_is_wrong) -> do
+         return $ Just ("Failed: \n" ++ f ++ ":" ++ " " ++ example ++ 
+                        "\n returns: \n" ++ result_that_is_wrong ++ 
+                        if not (null expected_result) 
+                           then "\n not: \n" ++ expected_result 
+                           else "\n so go ahead and fill it out")
+
+testCase (example, expected_result) file = runInterpreter $ do
+  loadModules ["*" ++ file]
+  modules <- getLoadedModules
+  setTopLevelModules modules
+  is_correct <- interpret (combineIntoEqualTest example expected_result) (as :: Bool)
+  case is_correct of
+       True -> return Nothing
+       False -> do
+         wrong_result <- (eval example)
+         return (Just wrong_result)
 
 -- | Parses the given str
 --
@@ -76,11 +86,11 @@ tryTestCase f str = do
 -- Returns a tuple (example, expected result)
 breakIntoTestCase :: String -> (String, String)
 breakIntoTestCase str = (example, result)
-            where 
-              splitted = splitOn "\n--" str
-              example = fixstr (head splitted)
-              result = unwords (map fixstr (tail splitted))
-              fixstr s = (strip $ replace "\n" " " s)
+  where 
+    splitted = splitOn "\n--" str
+    example  = fixstr (head splitted)
+    result   = unwords (map fixstr (tail splitted))
+    fixstr s = (strip $ replace "\n" " " s)
 
 -- | Simple function that adds a equality sign between two strings
 --
@@ -95,16 +105,6 @@ breakIntoTestCase str = (example, result)
 -- Returns a string with an equality sign inserted between the strings
 combineIntoEqualTest example expected_result = example ++ " == " ++ expected_result
 
-testCase (example, expected_result) file = runInterpreter $ do
-  loadModules ["*" ++ file]
-  modules <- getLoadedModules
-  setTopLevelModules modules
-  is_correct <- interpret (combineIntoEqualTest example expected_result) (as :: Bool)
-  case is_correct of
-       True -> return Nothing
-       False -> do
-              wrong_result <- (eval example)
-              return (Just wrong_result)
 
 -- | Duplicate some text an abitrary number of times.
 --
