@@ -1,0 +1,14 @@
+Name:                exam
+Version:             0.1
+Synopsis:            Tests your examples in your docs and calls git if successfull.
+Description:         Tests your Haddock (REPL) examples and calls git on 
+                     success.
+License:             BSD
+Author:              Daniel Öberg
+Maintainer:          Daniel Öberg <exam@unitedlambdas.com>
+Build-Depends:       split
+                     hint
+                     missingh
+                     regex-pcre-builtin
+Executable:          exam
+Main-is:             Exam.hs
