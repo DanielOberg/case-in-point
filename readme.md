@@ -1,28 +1,15 @@
-Test And Commit
-===============
-
-Test And Commit uses something similar that can only be described as
-Test Driven Developments little brother: Example Driven Development.
-
-It is meant for those projects where you want to get stuff done as 
-quickly as possible in small projects.
-
-It works like this:
-
-1. Write your projects README file first. This is based upon 
-   Readme Driven Development[^1].
-2. Write a comment that describe a function.
-3. Add an example for how it is supposed to look (in the comment
-   itself).
-4. Does the example look good (short and sweet)? Otherwise back to the
-   drawingboard.
-
-As previously stated Test And Commit is a tool for Example Driven 
-Development in Haskell.
+Case In Point (cip)
+===================
 
 What it does is to extract your examples, runs them and if it passes it 
 commits the changes to your repository. If an example fails then it
 tells you which example that failed.
+
+It is meant for those projects where you want to get stuff done as 
+quickly as possible in small projects.
+
+Example
+-------
 
 Used together with tomdoc[^2] like comments make for some sweet code:
 
@@ -33,7 +20,7 @@ Used together with tomdoc[^2] like comments make for some sweet code:
     --
     -- Examples
     --
-    --   > multiplex "Tom" 4
+    --   >>> multiplex "Tom" 4
     --   "TomTomTomTom"
     --
     -- Returns the duplicated String.
@@ -41,11 +28,42 @@ Used together with tomdoc[^2] like comments make for some sweet code:
 
 Use the tool like this
 
-    > testandcommit test.hs
-    git commit -am "PASSED: multiplex 'Tom' 4"
-       or if the code snippet fails:
-    FAILED: multiplex "Tom" 4
-    Result was: "Tom Tom Tom Tom"
+    > cip file_to_check_examples.hs
+
+
+Syntax for examples
+-------------------
+The line MUST start with "--".
+
+There MUST be no space before and there MUST be atleast one space after
+(like this: "\n-- ").
+
+There SHOULD be three spaces after, not one.
+
+It MUST have a > after. It SHOULD have three 
+(eg. "\n--   >>> testfunction 123")
+
+The expected result MUST be on the following (comment) line and end with an empty
+line.
+
+Workflow
+--------
+It works like this:
+
+1. Write your projects README file first. This is based upon 
+   Readme Driven Development[^1].
+2. Write a comment that describe a function.
+3. Add an example for how it is supposed to look (in the comment
+   itself) and its expected return value.
+4. Does the example look good (short and sweet)? Otherwise back to the
+   drawingboard.
+
+
+Limitations
+------------
+Only supports two lines at the moments. Haven't decided the syntax for 
+multiline support yet (it will be implemented).
+
 
 [^1]: http://tom.preston-werner.com/2010/08/23/readme-driven-development.html
 [^2]: http://tomdoc.org/

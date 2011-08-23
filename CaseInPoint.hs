@@ -21,7 +21,7 @@ import Data.List.Split
 main = do
   args <- getArgs
   case args of
-       [] -> putStrLn "Usage: ./exam file_with_comments.hs"
+       [] -> putStrLn "Usage: ./cip file_with_comments.hs"
        _ -> do
          results <- mapM readTestCasesFromFile args
          let errors = catMaybes (concat results)
