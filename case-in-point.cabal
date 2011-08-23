@@ -3,12 +3,16 @@ Version:             0.1
 Synopsis:            Tests your examples in your docs and calls git if successfull.
 Description:         Tests your Haddock (REPL) examples and calls git on 
                      success.
-License:             BSD
+License:             MIT
 Author:              Daniel Öberg
 Maintainer:          Daniel Öberg <exam@unitedlambdas.com>
-Build-Depends:       split
-                     hint
-                     missingh
+Build-Depends:       base,
+                     process,
+                     mtl,
+                     split,
+                     hint,
+                     MissingH,
                      regex-pcre-builtin
+build-type:          Simple
 Executable:          cip
 Main-is:             CaseInPoint.hs
