@@ -1,8 +1,8 @@
 Case In Point (cip)
 ===================
 
-What it does is to extract your examples, runs them and if it passes it 
-commits the changes to your repository. If an example fails then it
+What it does is to extract your examples, runs them and, if they are correct, 
+calls git. If an example fails then it
 tells you which example that failed.
 
 It is meant for those projects where you want to get stuff done as 
