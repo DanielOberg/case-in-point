@@ -45,12 +45,14 @@ Build-type:          Simple
 -- Constraint on the version of Cabal needed to build this package.
 Cabal-version:       >=1.2
 
-Build-Depends:       base,
-                     process,
-                     mtl,
-                     split,
-                     hint,
-                     MissingH,
-                     regex-pcre-builtin
-Executable:          cip
-Main-is:             CaseInPoint.hs
+
+Executable cip
+  Main-is:             CaseInPoint.hs
+  Build-Depends:       base,
+                       process,
+                       mtl,
+                       split,
+                       hint,
+                       MissingH,
+                       regex-pcre-builtin
+
