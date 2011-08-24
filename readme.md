@@ -20,11 +20,27 @@ Used together with tomdoc[^2] like comments make for some sweet code:
     --
     -- Examples
     --
-    --   >>> multiplex "Tom" 4
+    --   > multiplex "Tom" 4
     --   "TomTomTomTom"
     --
     -- Returns the duplicated String.
     multiplex text count = concat $ take count $ repeat text
+
+or if you prefer more haddock compatible syntax (the only thing that
+really matters is the example):
+
+    -- | Simple function that adds a equality sign between two strings
+    --
+    -- Examples
+    --
+    --   >>> combineIntoEqualTest "cat" "dog" 
+    --   "cat == dog"
+    --
+    combineIntoEqualTest :: [Char] -- ^ example
+                         -> [Char] -- ^ expected result
+                         -> [Char] -- ^ equality sign inserted between the strings
+    combineIntoEqualTest example expected_result = example ++ " == " ++ expected_result
+
 
 Use the tool like this
 
