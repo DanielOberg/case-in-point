@@ -23,13 +23,14 @@ main = do
   args <- getArgs
   let no_git = "--no-git" `elem` args
   let no_make = "--no-make" `elem` args
+  let files = filter (not . isPrefixOf "--") args
   case args of
        [] -> showHelp
        _ -> do
-         results <- mapM (if no_make then test else makeAndTest) args
+         results <- mapM (if no_make then test else makeAndTest) files
          let errors = catMaybes (concat results)
          case errors of
-              [] -> if no_git then return (ExitSuccess) else gitcommit args
+              [] -> if no_git then return (ExitSuccess) else gitcommit files
               _  -> do
                 mapM_ (putStrLn . (++ "\n")) errors 
                 return (ExitFailure 1)
