@@ -1,12 +1,24 @@
 Case In Point (cip)
 ===================
 
-What it does is to extract your examples, runs them and, if they are correct, 
-calls git. If an example fails then it
-tells you which example that failed.
+What Case In Point (cip) does is to extract your examples, runs them and, if they are correct, 
+calls git. If an example fails then it tells you which example that failed and what the result 
+was.
 
-It is meant for those projects where you want to get stuff done as 
-quickly as possible in small projects.
+
+Motivation
+----------
+Let's face it, Hackage isn't exacly filled to the brim with examples in
+the docs. I find this sad. 
+
+A small example that capture the essence of a function is golden when
+skimming though the docs. 
+
+What if we could help the developers skimming though or code and at the
+same time help ourselves? Why can't the example we give to other developers be no different than 
+any other testcase? And why we are at it. Why not let it be a 
+way to actually find out what result your function is actually giving
+you instead of having to load up ghci?
 
 
 Example
