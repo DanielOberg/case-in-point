@@ -8,6 +8,7 @@ tells you which example that failed.
 It is meant for those projects where you want to get stuff done as 
 quickly as possible in small projects.
 
+
 Example
 -------
 
@@ -47,6 +48,19 @@ Use the tool like this
     > cip file_to_check_examples.hs
 
 
+Prefered workflow
+-----------------
+
+1. Write your projects README file first and put it in a git repo. This is based upon 
+   Readme Driven Development[^1].
+2. Write a comment that describe a function.
+3. Add an example for how it is supposed to look (in the comment
+   itself) and its expected return value.
+4. Write the function.
+5. Run cip on the source. If the examples are correct it will call git
+   for you.
+
+
 Syntax for examples
 -------------------
 The line MUST start with "--".
@@ -61,18 +75,6 @@ It MUST have a > after. It SHOULD have three
 
 The expected result MUST be on the following (comment) line and end with an empty
 line.
-
-Workflow
---------
-It works like this:
-
-1. Write your projects README file first. This is based upon 
-   Readme Driven Development[^1].
-2. Write a comment that describe a function.
-3. Add an example for how it is supposed to look (in the comment
-   itself) and its expected return value.
-4. Does the example look good (short and sweet)? Otherwise back to the
-   drawingboard.
 
 
 Limitations
