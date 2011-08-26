@@ -71,7 +71,7 @@ Use the tool like this
     > cip file_to_check_examples.hs
 
 
-Prefered workflow
+Workflow example
 -----------------
 
 1. Write your projects README file first and put it in a git repo. This is based upon 
