@@ -76,6 +76,18 @@ Prefered workflow
 
 Syntax for examples
 -------------------
+
+How it should look:
+
+    --   >>> map show [1,2,3]
+    --   ["1", "2", "3"]
+    --
+    --   >>> map show [2,1,3]
+    --   ["2", "1", "3"]
+    --
+
+Notice the required last empty comment line!
+
 The line MUST start with "--".
 
 There MUST be no space before and there MUST be atleast one space after
