@@ -24,6 +24,16 @@ Better documentation and more testcases, what's not to like?
 
 Example
 -------
+Very, very simple example:
+
+    --   >>> map show [1,2,3]
+    --   ["1", "2", "3"]
+    --
+    --   >>> map show [2,1,3]
+    --   ["2", "1", "3"]
+    --
+
+Notice the required last empty comment line!
 
 Used together with tomdoc[^2] like comments make for some sweet code:
 
@@ -76,17 +86,6 @@ Prefered workflow
 
 Syntax for examples
 -------------------
-
-How it should look:
-
-    --   >>> map show [1,2,3]
-    --   ["1", "2", "3"]
-    --
-    --   >>> map show [2,1,3]
-    --   ["2", "1", "3"]
-    --
-
-Notice the required last empty comment line!
 
 The line MUST start with "--".
 
