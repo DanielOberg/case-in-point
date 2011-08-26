@@ -33,7 +33,11 @@ Very, very simple example:
     --   ["2", "1", "3"]
     --
 
-Notice the required last empty comment line!
+Notice the *required last empty comment line!*
+
+Use the tool like this
+
+    > cip file_to_check_examples.hs
 
 Used together with tomdoc[^2] like comments make for some sweet code:
 
@@ -65,10 +69,6 @@ really matters is the example):
                          -> [Char] -- ^ equality sign inserted between the strings
     combineIntoEqualTest example expected_result = example ++ " == " ++ expected_result
 
-
-Use the tool like this
-
-    > cip file_to_check_examples.hs
 
 
 Workflow example
