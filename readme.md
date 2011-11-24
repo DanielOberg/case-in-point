@@ -109,7 +109,7 @@ multiline support yet (it will be implemented).
 
 Other
 -----
-There is another Haskell implementation of Doctest [https://github.com/sol/doctest-haskell](here).
+There is another Haskell implementation of Doctest [here](https://github.com/sol/doctest-haskell).
 
 
 [^1]: http://tom.preston-werner.com/2010/08/23/readme-driven-development.html
