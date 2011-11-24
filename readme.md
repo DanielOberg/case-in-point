@@ -1,9 +1,9 @@
 Case In Point (cip)
 ===================
 
-What Case In Point (cip) does is to extract your examples, runs them and, if they are correct, 
-calls git. If an example fails then it tells you which example that failed and what the result 
-was.
+What Case In Point (cip) does is to extract your examples (that looks and works similarly to Pythons
+doctest module), runs them and, if they are correct, calls git. If an example fails then it tells you which 
+example that failed and what the result was.
 
 
 Motivation
@@ -105,6 +105,11 @@ Limitations
 ------------
 Only supports two lines at the moments. Haven't decided the syntax for 
 multiline support yet (it will be implemented).
+
+
+Other
+-----
+There is another Haskell implementation of Doctest [https://github.com/sol/doctest-haskell](here).
 
 
 [^1]: http://tom.preston-werner.com/2010/08/23/readme-driven-development.html
